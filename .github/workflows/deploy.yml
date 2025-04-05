@@ -29,7 +29,8 @@ jobs:
           ruff check .
 
       - name: Run Test
-        run: pytest
+        run: echo "No tests available yet."
+#        run: pytest
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
