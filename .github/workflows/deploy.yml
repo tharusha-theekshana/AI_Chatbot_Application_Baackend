@@ -34,7 +34,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ai-chatbot-backend:latest
+          tags: tharushatheekshana/ai-chatbot-backend:latest
 
       - name: Post Build Status
         run: echo "Image Built and Pushed Successfully!"
