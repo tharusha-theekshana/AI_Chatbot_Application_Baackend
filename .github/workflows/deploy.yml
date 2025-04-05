@@ -25,7 +25,7 @@ jobs:
           pip install pytest ruff
 
       - name: Run Ruff Linter
-        run: ruff ./
+        run: ruff app/
 
       - name: Run Test
         run: pytest
