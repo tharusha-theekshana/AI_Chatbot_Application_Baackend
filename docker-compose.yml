@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    image: ai-chatbot-backend:latest
+    container_name: AI-chatbot-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env

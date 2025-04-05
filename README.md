@@ -37,3 +37,10 @@
 7. Access to api doc generate with Fast API
    
     url : http://localhost:8000/docs
+
+
+8. Run with Docker if you need.
+
+   command : docker compose up --build
+
+   
