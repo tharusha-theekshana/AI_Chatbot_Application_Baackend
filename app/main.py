@@ -8,11 +8,10 @@ app = FastAPI()
 
 # Store google api key & gemini version
 apiKey = settings.GOOGLE_API_KEY
-gemini_version = settings.GEMINI_VERSION
 
 # Config google ai client
 generativeAi.configure(api_key=apiKey)
-model = generativeAi.GenerativeModel(gemini_version)
+model = generativeAi.GenerativeModel("gemini-2.0-flash")
 
 
 # Post endpoint
