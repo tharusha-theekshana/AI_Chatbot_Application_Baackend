@@ -27,7 +27,6 @@ jobs:
       - name: Run Ruff Linter
         run: |
           ruff check .
-          ruff fix .
 
       - name: Run Test
         run: pytest
