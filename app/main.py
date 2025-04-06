@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.config import settings
 from app.model import ChatRequest, ChatResponse
 
@@ -12,6 +14,15 @@ apiKey = settings.GOOGLE_API_KEY
 # Config google ai client
 generativeAi.configure(api_key=apiKey)
 model = generativeAi.GenerativeModel("gemini-2.0-flash")
+
+# CORS settings
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # or ["*"] to allow all
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # Post endpoint
