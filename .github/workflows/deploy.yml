@@ -1,4 +1,4 @@
-name: AI Chatbot Backend Build & Deploy
+name: AI Chatbot Backend CI/CD Pipeline
 
 on:
   push:
@@ -7,44 +7,70 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check Code
+      # 1. Checkout Code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
+      # 2. Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.13
+          python-version: '3.11'
 
+      # 3. Install dependencies
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           pip install pytest ruff
 
+      # 4. Run Ruff Linter (optional but good)
       - name: Run Ruff Linter
-        run: |
-          ruff check .
+        run: ruff check .
 
-      - name: Run Test
+      # 5. Run Tests (optional, currently placeholder)
+      - name: Run Tests
         run: echo "No tests available yet."
-#        run: pytest
+        # run: pytest
 
+      # 6. Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # 7. Login to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Write .env file with google API key
+      # 8. Log in to AWS ECR
+#      - name: Configure AWS Credentials
+#        uses: aws-actions/configure-aws-credentials@v2
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+#
+#      - name: Log in to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v1
+
+      # 9. Set environment variables
+      - name: Create .env File
         run: echo "GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}" > .env
 
-      - name: Build and Push Docker Image
+      # 10. Build and Push Docker Image to ECR or Docker hub
+      #     Want to push Docker image in ECR must use this line
+      #     tags: ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+
+      #     Want to push Docker image in Docker Hub must use this line
+      #     tags: <your_dockerhub_username>/ai-chatbot-backend:<tag>
+
+      - name: Build and Push Docker image to ECR
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -52,5 +78,15 @@ jobs:
           push: true
           tags: tharushatheekshana/ai-chatbot-backend:latest
 
+      # 11. Deploy to ECS
+#      - name: Deploy to Amazon ECS
+#        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+#        with:
+#          task-definition: ecs-task-definition.json
+#          service: ${{ secrets.ECS_SERVICE }}
+#          cluster: ${{ secrets.ECS_CLUSTER }}
+#          wait-for-service-stability: true
+
+      # 12. Verify all steps are completed
       - name: Post Build Status
         run: echo "Image built and pushed to hub successfully!"
